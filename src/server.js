@@ -1,13 +1,14 @@
-import connectDB from "./config/dbConnect.js";
-import  { constants }  from "./config/constant.js";
-const { PORT } = constants;
+import "./config/dbConnect.js"; // Initialize Firebase (Firestore & Storage)
+import { constants } from "./config/constant.js";
 import app from "./app.js";
 
+const { PORT } = constants;
 
-// Database Connection
-// connectDB();
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+const server = app.listen(PORT, () => {
+    console.log(`✅ Server running on port ${PORT}`);
+
 });
+
+
 

@@ -1,10 +1,7 @@
-// import { createAvatar } from "../services/replicate.service.js";
-// import { uploadBuffer, saveJobRecord } from "../services/firebase.service.js";
-// import { generateFilename } from "../utils/appUtils.js";
-// import { AVATAR_FOLDER, ORIGINAL_FOLDER } from "../config/constant.js";
 import { generateFilename } from "../utils/generateFile.js";
 import { errorResponse } from "../utils/response.js";
 import { constants } from "../config/constant.js";
+import { uploadBuffer } from "../services/firebase.service.js";
 
 const generateAvatarController = async (req, res, next) => {
     try {
@@ -19,9 +16,15 @@ const generateAvatarController = async (req, res, next) => {
 
         const originalPath = `${constants.ORIGINAL_FOLDER}/${originalName}`;
 
-
-        // // Upload original to Firebase
-        // const origUpload = await uploadBuffer(originalBuffer, originalPath, req.file.mimetype);
+        // Upload original to Firebase
+        const origUpload = await uploadBuffer(originalBuffer, originalPath, "image/png");
+        
+        // Return response for now (until Replicate integration is complete)
+        return res.json({ 
+            success: true, 
+            message: "Original image uploaded successfully",
+            data: { original: origUpload.publicUrl, path: origUpload.path }
+        });
 
         // // Convert to base64 for Replicate (or provide URL if model accepts remote URL)
         // const base64 = originalBuffer.toString("base64");
