@@ -3,29 +3,27 @@ import { errorResponse } from "../utils/response.js";
 import { constants } from "../config/constant.js";
 import { uploadBuffer } from "../services/firebase.service.js";
 
+
+
 const generateAvatarController = async (req, res, next) => {
     try {
-        const userId = req.userId || req.header("x-device-id") || null;
-        if (!req.file) {
-            return errorResponse(res, 400, "Image is required");
-        };
-        // original buffer
-        const originalBuffer = req.file.buffer; 
+        const originalBuffer = req.file.buffer;
 
-        const originalName = generateFilename("png");
 
-        const originalPath = `${constants.ORIGINAL_FOLDER}/${originalName}`;
+        // Upload face to Firebase
+        const faceName = generateFilename("png");
+        const facePath = `${constants.ORIGINAL_FOLDER}/${faceName}`;
 
-        // Upload original to Firebase
-        const origUpload = await uploadBuffer(originalBuffer, originalPath, "image/png");
-        
-        // Return response for now (until Replicate integration is complete)
-        return res.json({ 
-            success: true, 
-            message: "Original image uploaded successfully",
-            data: { original: origUpload.publicUrl, path: origUpload.path }
+        const faceUpload = await uploadBuffer(originalBuffer, facePath);
+
+        return res.json({
+            success: true,
+            message: "Face cropped successfully",
+            data: {
+                cropped: faceUpload.publicUrl,
+                path: faceUpload.path
+            }
         });
-
         // // Convert to base64 for Replicate (or provide URL if model accepts remote URL)
         // const base64 = originalBuffer.toString("base64");
 
